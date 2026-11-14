@@ -1,6 +1,6 @@
 {
   "name": "@fringeworks/react-icon-material-symbols",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "A library some will find handy, for using Material Symbols as typed React components with variable font axes.",
   "keywords": [
@@ -36,7 +36,6 @@
     "lint:fix": "eslint . --fix",
     "release": "pnpm build && npm publish ./dist",
     "storybook": "storybook dev -p 6006",
-    "symbols:update": "tsx ./scripts/symbols-update.ts",
     "test": "vitest",
     "tidy": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\" --config ./prettier.tidy.config.ts"
   },

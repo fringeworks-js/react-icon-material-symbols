@@ -172,7 +172,7 @@ function Toolbar() {
 
 ### Using names missing from the type
 
-`MaterialSymbolValue` holds the Material Symbols names as of the version of this package. To use names missing from the type, such as newly added icons, create a component with a wider name type with react-icon's `createFontIcon` (it does not have the variable font axis props or `design`).
+`MaterialSymbolValue` is the type of the npm `material-symbols` package installed with this package, so the names match the installed fonts. To use names missing from the type, such as newly added icons, create a component with a wider name type with react-icon's `createFontIcon` (it does not have the variable font axis props or `design`).
 
 ```tsx
 import { createFontIcon } from '@fringeworks/react-icon';
@@ -264,7 +264,7 @@ The class rules have zero specificity (`:where()`), so your own CSS overrides th
 
 | Type                      | Description                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `MaterialSymbolValue`     | The Material Symbols icon names (copied from the npm `material-symbols` package)                                           |
+| `MaterialSymbolValue`     | The Material Symbols icon names (the type of the npm `material-symbols` package)                                           |
 | `MaterialSymbolProps`     | The components' props                                                                                                      |
 | `MaterialSymbolDesign`    | The components' `design` value                                                                                             |
 | `MaterialSymbolComponent` | The component type (including static properties)                                                                           |
@@ -279,4 +279,4 @@ The class rules have zero specificity (`:where()`), so your own CSS overrides th
 
 MIT
 
-The icon name type (`MaterialSymbolValue`) is copied from the npm [`material-symbols`](https://github.com/marella/material-symbols) package. Material Symbols is by Google; both are distributed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+The icon name type (`MaterialSymbolValue`) and the fonts come from the npm [`material-symbols`](https://github.com/marella/material-symbols) package. Material Symbols is by Google; both are distributed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).

@@ -172,7 +172,7 @@ function Toolbar() {
 
 ### 型に無い名前を使う
 
-`MaterialSymbolValue` は、このパッケージの版を作ったときの Material Symbols の名前です。新しく増えたアイコンなど、型に無い名前を使いたいときは、react-icon の `createFontIcon` で名前の型を広げた部品を作れます（可変フォントの軸のプロパティと `design` は持ちません）。
+`MaterialSymbolValue` は、このパッケージと一緒に入る npm の `material-symbols` の型で、入っているフォントの名前とそろいます。新しく増えたアイコンなど、型に無い名前を使いたいときは、react-icon の `createFontIcon` で名前の型を広げた部品を作れます（可変フォントの軸のプロパティと `design` は持ちません）。
 
 ```tsx
 import { createFontIcon } from '@fringeworks/react-icon';
@@ -264,7 +264,7 @@ MaterialSymbolSharp(props: MaterialSymbolProps): ReactElement
 
 | 型                        | 説明                                                                                                |
 | ------------------------- | --------------------------------------------------------------------------------------------------- |
-| `MaterialSymbolValue`     | Material Symbols のアイコンの名前（npm の `material-symbols` から写したもの）                       |
+| `MaterialSymbolValue`     | Material Symbols のアイコンの名前（npm の `material-symbols` の型）                                 |
 | `MaterialSymbolProps`     | 部品のプロパティ                                                                                    |
 | `MaterialSymbolDesign`    | 部品の `design` の値                                                                                |
 | `MaterialSymbolComponent` | 部品の型（静的なプロパティを含む）                                                                  |
@@ -279,4 +279,4 @@ MaterialSymbolSharp(props: MaterialSymbolProps): ReactElement
 
 MIT
 
-アイコンの名前の型（`MaterialSymbolValue`）は、npm の [`material-symbols`](https://github.com/marella/material-symbols) から写したものです。Material Symbols は Google のもので、どちらも [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0) で配布されています。
+アイコンの名前の型（`MaterialSymbolValue`）とフォントは、npm の [`material-symbols`](https://github.com/marella/material-symbols) のものを使っています。Material Symbols は Google のもので、どちらも [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0) で配布されています。
