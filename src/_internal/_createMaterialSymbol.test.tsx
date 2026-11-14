@@ -43,7 +43,12 @@ describe('createMaterialSymbol', () => {
 
   it('軸のプロパティを CSS 変数に書く', () => {
     const span = renderSpan(
-      <MaterialSymbolOutlined value="home" weight={300} filled grade={-25} />,
+      <MaterialSymbolOutlined
+        value="home"
+        fontWeight={300}
+        filled
+        grade={-25}
+      />,
     );
     expect(span.style.getPropertyValue('--frg-materialsymbol-fontWeight')).toBe(
       '300',
@@ -54,8 +59,24 @@ describe('createMaterialSymbol', () => {
     expect(span.style.getPropertyValue('--frg-materialsymbol-grade')).toBe(
       '-25',
     );
+    // プロパティはすべての状態に効く
+    expect(
+      span.style.getPropertyValue('--frg-materialsymbol-fontWeight-hover'),
+    ).toBe('300');
+    expect(
+      span.style.getPropertyValue('--frg-materialsymbol-filled-hover'),
+    ).toBe('1');
     // 光学サイズを指定していないときは、opsz を書くクラスを付けない
     expect(span.classList).not.toContain('frg-materialsymbol-opticalSize');
+  });
+
+  it('filled の数値は、そのまま書く', () => {
+    const span = renderSpan(
+      <MaterialSymbolOutlined value="home" filled={0.5} />,
+    );
+    expect(span.style.getPropertyValue('--frg-materialsymbol-filled')).toBe(
+      '0.5',
+    );
   });
 
   it('filled={false} は 0 を書く', () => {
@@ -101,20 +122,51 @@ describe('createMaterialSymbol', () => {
     ).toBe('500');
   });
 
-  it('プロパティは design の状態なしの値を上書きし、状態の値は残す', () => {
+  it('design の状態ごとの値はプロパティより強く、省略した状態はプロパティの値', () => {
+    const span = renderSpan(
+      <MaterialSymbolOutlined
+        value="home"
+        fontWeight={300}
+        design={{ fontWeight: { hover: 700 } }}
+      />,
+    );
+    expect(span.style.getPropertyValue('--frg-materialsymbol-fontWeight')).toBe(
+      '300',
+    );
+    expect(
+      span.style.getPropertyValue('--frg-materialsymbol-fontWeight-hover'),
+    ).toBe('700');
+  });
+
+  it('design の1つの値は、プロパティをすべての状態で上書きする', () => {
     const span = renderSpan(
       <MaterialSymbolOutlined
         value="home"
         filled={false}
-        design={{ filled: { base: 1, hover: 1 } }}
+        design={{ filled: 1 }}
       />,
     );
     expect(span.style.getPropertyValue('--frg-materialsymbol-filled')).toBe(
-      '0',
+      '1',
     );
     expect(
       span.style.getPropertyValue('--frg-materialsymbol-filled-hover'),
     ).toBe('1');
+  });
+
+  it('design の base だけを指定したときは、hover の変数を書かない（部品の既定の値になる）', () => {
+    const span = renderSpan(
+      <MaterialSymbolOutlined
+        value="home"
+        design={{ fontWeight: { base: 700 } }}
+      />,
+    );
+    expect(span.style.getPropertyValue('--frg-materialsymbol-fontWeight')).toBe(
+      '700',
+    );
+    expect(
+      span.style.getPropertyValue('--frg-materialsymbol-fontWeight-hover'),
+    ).toBe('');
   });
 
   it('受け取った className・style を後に重ね、同じプロパティは受け取った値を優先する', () => {
@@ -160,5 +212,29 @@ describe('createMaterialSymbol', () => {
     expect(
       span.style.getPropertyValue('--frg-materialsymbol-filled-hover'),
     ).toBe('1');
+  });
+
+  it('プロパティは withDesign の値より強い。プロパティで指定していない軸は withDesign の値', () => {
+    const AppSymbol = withDesign(MaterialSymbolOutlined, {
+      fontWeight: { base: 700, hover: 700 },
+      filled: { hover: 1 },
+    });
+    const span = renderSpan(<AppSymbol value="home" fontWeight={200} />);
+    expect(span.style.getPropertyValue('--frg-materialsymbol-fontWeight')).toBe(
+      '200',
+    );
+    expect(
+      span.style.getPropertyValue('--frg-materialsymbol-fontWeight-hover'),
+    ).toBe('200');
+    expect(
+      span.style.getPropertyValue('--frg-materialsymbol-filled-hover'),
+    ).toBe('1');
+  });
+
+  it('withDesign の光学サイズでも、opsz を書くクラスを付ける', () => {
+    const AppSymbol = withDesign(MaterialSymbolOutlined, { opticalSize: 20 });
+    expect(renderSpan(<AppSymbol value="home" />).classList).toContain(
+      'frg-materialsymbol-opticalSize',
+    );
   });
 });

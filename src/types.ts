@@ -30,18 +30,19 @@ export type MaterialSymbolDesign = Design<
  * Material Symbols の部品のプロパティ
  *
  * `value` でアイコンの名前を受け取る。そのほかの props は `<span>` に渡す。
+ * 軸のプロパティ（`fontWeight`・`filled`・`grade`・`opticalSize`）は、すべての状態に効く。
  */
 export type MaterialSymbolProps = FontIconProps<MaterialSymbolValue> & {
   /**
    * 太さ（`wght` の軸。100〜700）。`font-weight` で描く
    */
-  weight?: number;
+  fontWeight?: number;
 
   /**
-   * 塗りつぶした形にする（`FILL` の軸）
+   * 塗り（`FILL` の軸）。`true` で塗りつぶした形、`false` で線の形。0〜1 の数値で途中の形にもできる（`true` は 1、`false` は 0）
    * @default false
    */
-  filled?: boolean;
+  filled?: boolean | number;
 
   /**
    * グレード（`GRAD` の軸。-25〜200）。太さを変えずに線の濃さを変える
@@ -54,9 +55,15 @@ export type MaterialSymbolProps = FontIconProps<MaterialSymbolValue> & {
   opticalSize?: number;
 
   /**
-   * デザインの値（軸ごとに、`hover` の値も指定できる）。同じ軸のプロパティを指定した場合は、状態なしの値をプロパティで上書きする
+   * デザインの値（軸ごとに、`hover` の値も指定できる）。同じ軸のプロパティより強い。
+   * 状態ごとのオブジェクトで省略した状態は、プロパティの値（プロパティも無ければ部品の既定の値）になる
    */
   design?: MaterialSymbolDesign;
+
+  /**
+   * アプリで共通のデザインの値（react-contract の `withDesign` が渡す）。プロパティと `design` で指定していない軸・状態を補う
+   */
+  fallbackDesign?: MaterialSymbolDesign;
 };
 
 /**

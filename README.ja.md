@@ -98,18 +98,18 @@ Material Symbols の4つの軸を、プロパティで変えられます。
 
 ```tsx
 <MaterialSymbolOutlined value="favorite" filled />
-<MaterialSymbolOutlined value="settings" weight={300} grade={-25} />
+<MaterialSymbolOutlined value="settings" fontWeight={300} grade={-25} />
 <MaterialSymbolOutlined value="search" opticalSize={20} />
 ```
 
 | プロパティ     | 軸     | 説明                                                                                                          |
 | -------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
-| `weight?`      | `wght` | 太さ（100〜700）。CSS の `font-weight` で描く                                                                 |
-| `filled?`      | `FILL` | 塗りつぶした形にする。既定は `false`                                                                          |
+| `fontWeight?`  | `wght` | 太さ（100〜700）。CSS の `font-weight` で描く                                                                 |
+| `filled?`      | `FILL` | `true` で塗りつぶした形、`false`（既定）で線の形。0〜1 の数値で途中の形にもできる                             |
 | `grade?`       | `GRAD` | グレード（-25〜200）。太さ（アイコンの大きさ）を変えずに、線の濃さを変える                                    |
 | `opticalSize?` | `opsz` | 光学サイズ（20〜48）。指定しなければ、ブラウザーが文字の大きさに合わせて決める（`font-optical-sizing: auto`） |
 
-軸の値は CSS 変数（`--frg-materialsymbol-filled` など。下の「デザインの値」の表）から組み立てるので、CSS でも軸ごとに変えられます。
+軸のプロパティは、乗ったときなど、すべての状態に効きます（`design` に1つの値で書いたのと同じ）。軸の値は CSS 変数（`--frg-materialsymbol-filled` など。下の「デザインの値」の表）から組み立てるので、CSS でも軸ごとに変えられます。
 
 ### アイコンに乗ったときに変える
 
@@ -122,11 +122,12 @@ Material Symbols の4つの軸を、プロパティで変えられます。
 />
 ```
 
-ボタンなど、親の要素に乗ったときに変えるには、CSS で変数を設定します。
+ボタンなど、親の要素に乗ったときに変えるには、CSS で変数を設定します。アイコン自身に乗ったときの変数（`-hover`）も書いてください。書かないと、ポインターがアイコンの上に来たときに、アイコンの `:hover` の既定の値に戻ります。
 
 ```css
 .favorite-button:hover {
   --frg-materialsymbol-filled: 1;
+  --frg-materialsymbol-filled-hover: 1;
 }
 ```
 
@@ -139,6 +140,21 @@ import { withDesign } from '@fringeworks/react-contract';
 
 const Icon = withDesign(MaterialSymbolOutlined, { filled: { hover: 1 } });
 ```
+
+### プロパティ・`design`・`withDesign` の重なり方
+
+同じ軸を複数の方法で指定したときは、使う場所の `design` ＞ 軸のプロパティ ＞ `withDesign` の値（`fallbackDesign`）の順に強くなります。強い方で指定していない状態は、弱い方の値になります。
+
+| 指定                                                                   | 状態なし | 乗ったとき            |
+| ---------------------------------------------------------------------- | -------- | --------------------- |
+| `fontWeight={300}`                                                     | 300      | 300                   |
+| `fontWeight={300}` と `design={{ fontWeight: { hover: 700 } }}`        | 300      | 700                   |
+| `design={{ fontWeight: { base: 700 } }}`                               | 700      | 400（部品の既定の値） |
+| `design={{ fontWeight: 700 }}`                                         | 700      | 700                   |
+| `withDesign` の `{ fontWeight: { hover: 700 } }` と `fontWeight={300}` | 300      | 300                   |
+
+- `design` の状態ごとのオブジェクトで省略した状態は、`base` の値を引き継ぎません（`{ base: 700 }` は状態なしの値だけを決めます）。すべての状態で同じにするときは、1つの値（`fontWeight: 700`）で書きます。
+- `withDesign` の値は、使う場所のプロパティより弱くなります。アプリで共通に決めた軸も、使う場所でプロパティを書けば変えられます。
 
 ### 読み上げ
 
@@ -201,14 +217,15 @@ MaterialSymbolSharp(props: MaterialSymbolProps): ReactElement
 
 `value` のアイコンを、`<span>` に合字の文字として描きます。そのほかの props は `<span>` に渡し（`ref` も `<span>` を指します）、`className`・`style` は合成して、同じプロパティは受け取った値を優先します。
 
-| プロパティ     | 型                     | 説明                                                                                         |
-| -------------- | ---------------------- | -------------------------------------------------------------------------------------------- |
-| `value`        | `MaterialSymbolValue`  | アイコンの名前                                                                               |
-| `weight?`      | `number`               | 太さ（`wght`。100〜700）                                                                     |
-| `filled?`      | `boolean`              | 塗りつぶした形にする（`FILL`）。既定は `false`                                               |
-| `grade?`       | `number`               | グレード（`GRAD`。-25〜200）                                                                 |
-| `opticalSize?` | `number`               | 光学サイズ（`opsz`。20〜48）。指定しなければ文字の大きさに合わせて決まる                     |
-| `design?`      | `MaterialSymbolDesign` | デザインの値（下の表）。同じ軸のプロパティを指定したら、状態なしの値はプロパティで上書きする |
+| プロパティ        | 型                     | 説明                                                                                                    |
+| ----------------- | ---------------------- | ------------------------------------------------------------------------------------------------------- |
+| `value`           | `MaterialSymbolValue`  | アイコンの名前                                                                                          |
+| `fontWeight?`     | `number`               | 太さ（`wght`。100〜700）                                                                                |
+| `filled?`         | `boolean \| number`    | 塗り（`FILL`）。`true` は 1、`false`（既定）は 0。0〜1 の数値も受け付ける                               |
+| `grade?`          | `number`               | グレード（`GRAD`。-25〜200）                                                                            |
+| `opticalSize?`    | `number`               | 光学サイズ（`opsz`。20〜48）。指定しなければ文字の大きさに合わせて決まる                                |
+| `design?`         | `MaterialSymbolDesign` | デザインの値（下の表）。同じ軸のプロパティより強い                                                      |
+| `fallbackDesign?` | `MaterialSymbolDesign` | アプリで共通のデザインの値（`withDesign` が渡す）。プロパティと `design` で指定していない軸・状態を補う |
 
 部品の静的なプロパティ:
 
@@ -220,16 +237,16 @@ MaterialSymbolSharp(props: MaterialSymbolProps): ReactElement
 
 #### デザインの値
 
-`design` で渡せるデザインの値です（CSS 変数は `--frg-materialsymbol-` の後にキーを `-` でつないだもの。例: `filled.hover` → `--frg-materialsymbol-filled-hover`）。`hover` の値を指定しなければ、乗ったときも状態なしの値のままです。
+`design` で渡せるデザインの値です（CSS 変数は `--frg-materialsymbol-` の後にキーを `-` でつないだもの。例: `filled.hover` → `--frg-materialsymbol-filled-hover`）。`hover` の値を指定しなければ、乗ったときは部品の既定の値です（状態なしの値を引き継ぎません）。1つの値は、`hover` にも効きます。
 
 | キー               | 既定値 | 説明                                                       |
 | ------------------ | ------ | ---------------------------------------------------------- |
 | `fontWeight`       | `400`  | 太さ（`wght`）                                             |
-| `fontWeight.hover` | —      | 乗ったときの太さ                                           |
+| `fontWeight.hover` | `400`  | 乗ったときの太さ                                           |
 | `filled`           | `0`    | 塗り（`FILL`。0〜1。途中の値は、アニメーションの途中の形） |
-| `filled.hover`     | —      | 乗ったときの塗り                                           |
+| `filled.hover`     | `0`    | 乗ったときの塗り                                           |
 | `grade`            | `0`    | グレード（`GRAD`）                                         |
-| `grade.hover`      | —      | 乗ったときのグレード                                       |
+| `grade.hover`      | `0`    | 乗ったときのグレード                                       |
 | `opticalSize`      | —      | 光学サイズ（`opsz`）。指定したときだけ固定する             |
 
 `design` の値は、[`@fringeworks/react-contract`](https://www.npmjs.com/package/@fringeworks/react-contract) の `createDesignStyle` の規則で書きます。`filled`・`grade`・`opticalSize` は、CSS のプロパティが無い可変フォントの軸のための名前です。

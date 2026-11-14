@@ -98,18 +98,18 @@ You can change the four Material Symbols axes with props.
 
 ```tsx
 <MaterialSymbolOutlined value="favorite" filled />
-<MaterialSymbolOutlined value="settings" weight={300} grade={-25} />
+<MaterialSymbolOutlined value="settings" fontWeight={300} grade={-25} />
 <MaterialSymbolOutlined value="search" opticalSize={20} />
 ```
 
-| Prop           | Axis   | Description                                                                                                 |
-| -------------- | ------ | ----------------------------------------------------------------------------------------------------------- |
-| `weight?`      | `wght` | Weight (100–700). Drawn with the CSS `font-weight`                                                          |
-| `filled?`      | `FILL` | Use the filled shape. Defaults to `false`                                                                   |
-| `grade?`       | `GRAD` | Grade (-25–200). Changes the stroke thickness without changing the weight (the icon's size)                 |
-| `opticalSize?` | `opsz` | Optical size (20–48). If omitted, the browser picks it to match the text size (`font-optical-sizing: auto`) |
+| Prop           | Axis   | Description                                                                                                        |
+| -------------- | ------ | ------------------------------------------------------------------------------------------------------------------ |
+| `fontWeight?`  | `wght` | Weight (100–700). Drawn with the CSS `font-weight`                                                                 |
+| `filled?`      | `FILL` | `true` for the filled shape, `false` (default) for the outlined one. A number from 0 to 1 gives a shape in between |
+| `grade?`       | `GRAD` | Grade (-25–200). Changes the stroke thickness without changing the weight (the icon's size)                        |
+| `opticalSize?` | `opsz` | Optical size (20–48). If omitted, the browser picks it to match the text size (`font-optical-sizing: auto`)        |
 
-The axis values are built from CSS variables (`--frg-materialsymbol-filled` and so on; see the "Design values" table below), so you can also change each axis with CSS.
+The axis props apply in every state, including hover (the same as a single value in `design`). The axis values are built from CSS variables (`--frg-materialsymbol-filled` and so on; see the "Design values" table below), so you can also change each axis with CSS.
 
 ### Changing on hover
 
@@ -122,11 +122,12 @@ With `design`, you can set the value for each axis when the pointer is over the 
 />
 ```
 
-To change it when the pointer is over a parent element such as a button, set the variable with CSS.
+To change it when the pointer is over a parent element such as a button, set the variable with CSS. Set the variable for hovering the icon itself (`-hover`) too. Otherwise, when the pointer moves onto the icon, the icon's `:hover` falls back to the default value.
 
 ```css
 .favorite-button:hover {
   --frg-materialsymbol-filled: 1;
+  --frg-materialsymbol-filled-hover: 1;
 }
 ```
 
@@ -139,6 +140,21 @@ import { withDesign } from '@fringeworks/react-contract';
 
 const Icon = withDesign(MaterialSymbolOutlined, { filled: { hover: 1 } });
 ```
+
+### How props, `design`, and `withDesign` combine
+
+When the same axis is set in more than one way, the `design` where it is used > the axis prop > the `withDesign` values (`fallbackDesign`). States a stronger one does not set take the weaker one's value.
+
+| Set                                                                     | Stateless | On hover                      |
+| ----------------------------------------------------------------------- | --------- | ----------------------------- |
+| `fontWeight={300}`                                                      | 300       | 300                           |
+| `fontWeight={300}` and `design={{ fontWeight: { hover: 700 } }}`        | 300       | 700                           |
+| `design={{ fontWeight: { base: 700 } }}`                                | 700       | 400 (the component's default) |
+| `design={{ fontWeight: 700 }}`                                          | 700       | 700                           |
+| `{ fontWeight: { hover: 700 } }` in `withDesign` and `fontWeight={300}` | 300       | 300                           |
+
+- States omitted in an object per state in `design` do not take over the `base` value (`{ base: 700 }` sets only the stateless value). To use the same value in every state, write a single value (`fontWeight: 700`).
+- The `withDesign` values are weaker than the props where the component is used. You can change an axis set app-wide by writing the prop where it is used.
 
 ### Accessibility
 
@@ -201,14 +217,15 @@ MaterialSymbolSharp(props: MaterialSymbolProps): ReactElement
 
 Draws the `value` icon as ligature text in a `<span>`. Other props are passed to the `<span>` (`ref` also points to the `<span>`); `className` and `style` are merged, and for the same property the received value wins.
 
-| Property       | Type                   | Description                                                                                       |
-| -------------- | ---------------------- | ------------------------------------------------------------------------------------------------- |
-| `value`        | `MaterialSymbolValue`  | The icon name                                                                                     |
-| `weight?`      | `number`               | Weight (`wght`, 100–700)                                                                          |
-| `filled?`      | `boolean`              | Use the filled shape (`FILL`). Defaults to `false`                                                |
-| `grade?`       | `number`               | Grade (`GRAD`, -25–200)                                                                           |
-| `opticalSize?` | `number`               | Optical size (`opsz`, 20–48). If omitted, it follows the text size                                |
-| `design?`      | `MaterialSymbolDesign` | Design values (table below). If a prop for the same axis is set, it overrides the stateless value |
+| Property          | Type                   | Description                                                                                                     |
+| ----------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `value`           | `MaterialSymbolValue`  | The icon name                                                                                                   |
+| `fontWeight?`     | `number`               | Weight (`wght`, 100–700)                                                                                        |
+| `filled?`         | `boolean \| number`    | Fill (`FILL`). `true` is 1, `false` (default) is 0. Also takes a number from 0 to 1                             |
+| `grade?`          | `number`               | Grade (`GRAD`, -25–200)                                                                                         |
+| `opticalSize?`    | `number`               | Optical size (`opsz`, 20–48). If omitted, it follows the text size                                              |
+| `design?`         | `MaterialSymbolDesign` | Design values (table below). Stronger than the prop for the same axis                                           |
+| `fallbackDesign?` | `MaterialSymbolDesign` | The app-wide design values (passed by `withDesign`). Fill the axes and states the props and `design` do not set |
 
 Static properties of the components:
 
@@ -220,16 +237,16 @@ Static properties of the components:
 
 #### Design values
 
-The design values you can pass with `design` (the CSS variable is `--frg-materialsymbol-` followed by the key joined with `-`, e.g. `filled.hover` → `--frg-materialsymbol-filled-hover`). If you do not set the `hover` value, the stateless value stays on hover.
+The design values you can pass with `design` (the CSS variable is `--frg-materialsymbol-` followed by the key joined with `-`, e.g. `filled.hover` → `--frg-materialsymbol-filled-hover`). If you do not set the `hover` value, the component's default applies on hover (the stateless value is not taken over). A single value also applies to `hover`.
 
 | Key                | Default | Description                                                    |
 | ------------------ | ------- | -------------------------------------------------------------- |
 | `fontWeight`       | `400`   | Weight (`wght`)                                                |
-| `fontWeight.hover` | —       | Weight on hover                                                |
+| `fontWeight.hover` | `400`   | Weight on hover                                                |
 | `filled`           | `0`     | Fill (`FILL`, 0–1; values in between are mid-animation shapes) |
-| `filled.hover`     | —       | Fill on hover                                                  |
+| `filled.hover`     | `0`     | Fill on hover                                                  |
 | `grade`            | `0`     | Grade (`GRAD`)                                                 |
-| `grade.hover`      | —       | Grade on hover                                                 |
+| `grade.hover`      | `0`     | Grade on hover                                                 |
 | `opticalSize`      | —       | Optical size (`opsz`). Fixed only when set                     |
 
 `design` values follow the rules of `createDesignStyle` from [`@fringeworks/react-contract`](https://www.npmjs.com/package/@fringeworks/react-contract). `filled`, `grade`, and `opticalSize` are names for variable font axes that have no CSS property.

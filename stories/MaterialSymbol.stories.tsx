@@ -1,3 +1,4 @@
+import { withDesign } from '@fringeworks/react-contract';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CSSProperties } from 'react';
 import {
@@ -18,7 +19,7 @@ const meta = {
   },
   argTypes: {
     filled: { control: 'boolean' },
-    weight: { control: { type: 'range', min: 100, max: 700, step: 100 } },
+    fontWeight: { control: { type: 'range', min: 100, max: 700, step: 100 } },
     grade: { control: { type: 'range', min: -25, max: 200, step: 25 } },
     opticalSize: { control: { type: 'range', min: 20, max: 48, step: 4 } },
   },
@@ -36,6 +37,12 @@ type Story = StoryObj<typeof meta>;
 
 const row: CSSProperties = { display: 'flex', alignItems: 'center', gap: 16 };
 const grid: CSSProperties = { display: 'grid', gap: 12 };
+
+// アプリで共通の値を決めた部品（Layers で使う）
+const AppSymbol = withDesign(MaterialSymbolOutlined, {
+  fontWeight: { base: 700, hover: 700 },
+  filled: { hover: 1 },
+});
 
 /**
  * 大きさは親の `font-size` を継承する（この例は 48px の中に置いている）
@@ -98,14 +105,18 @@ export const InheritedSize: Story = {
 };
 
 /**
- * 可変フォントの軸。太さ（`weight`）・グレード（`grade`）・塗り（`filled`）・光学サイズ（`opticalSize`）
+ * 可変フォントの軸。太さ（`fontWeight`）・グレード（`grade`）・塗り（`filled`）・光学サイズ（`opticalSize`）
  */
 export const Axes: Story = {
   render: (args) => (
     <div style={{ ...grid, fontSize: 40 }}>
       <div style={row}>
-        {[100, 200, 300, 400, 500, 600, 700].map((weight) => (
-          <MaterialSymbolOutlined key={weight} {...args} weight={weight} />
+        {[100, 200, 300, 400, 500, 600, 700].map((fontWeight) => (
+          <MaterialSymbolOutlined
+            key={fontWeight}
+            {...args}
+            fontWeight={fontWeight}
+          />
         ))}
       </div>
       <div style={row}>
@@ -115,6 +126,7 @@ export const Axes: Story = {
       </div>
       <div style={row}>
         <MaterialSymbolOutlined {...args} filled={false} />
+        <MaterialSymbolOutlined {...args} filled={0.5} />
         <MaterialSymbolOutlined {...args} filled />
       </div>
       <div style={row}>
@@ -126,6 +138,38 @@ export const Axes: Story = {
             opticalSize={opticalSize}
           />
         ))}
+      </div>
+    </div>
+  ),
+};
+
+/**
+ * プロパティ・`design`・`withDesign` の重なり方。
+ * 使う場所の `design` ＞ プロパティ ＞ `withDesign`（`fallbackDesign`）の順に強い。アイコンに乗って確かめる
+ */
+export const Layers: Story = {
+  render: (args) => (
+    <div style={{ ...grid, fontSize: 48 }}>
+      <div style={row}>
+        {/* 300。乗っても 300 */}
+        <MaterialSymbolOutlined {...args} fontWeight={300} />
+        {/* 300。乗ると 700 */}
+        <MaterialSymbolOutlined
+          {...args}
+          fontWeight={300}
+          design={{ fontWeight: { hover: 700 } }}
+        />
+        {/* 700。乗ると既定の 400 */}
+        <MaterialSymbolOutlined
+          {...args}
+          design={{ fontWeight: { base: 700 } }}
+        />
+      </div>
+      <div style={row}>
+        {/* withDesign の 700。乗ると塗る */}
+        <AppSymbol {...args} />
+        {/* プロパティの 200 が withDesign より強い。乗っても 200 で、塗りは withDesign のまま */}
+        <AppSymbol {...args} fontWeight={200} />
       </div>
     </div>
   ),
@@ -148,14 +192,14 @@ export const HoverWithDesign: Story = {
 };
 
 /**
- * 親に乗ったときに変えるのは、利用者が CSS で書く（`.button:hover { --frg-materialsymbol-filled: 1 }`）
+ * 親に乗ったときに変えるのは、利用者が CSS で書く（`.button:hover { --frg-materialsymbol-filled: 1; --frg-materialsymbol-filled-hover: 1 }`）。アイコン自身に乗ったときの値（`-hover`）も書かないと、アイコンの上で既定の値に戻る
  */
 export const ParentHover: Story = {
   render: (args) => (
     <>
       <style>
         {
-          '.story-favorite:hover { --frg-materialsymbol-filled: 1; color: #d81b60; }'
+          '.story-favorite:hover { --frg-materialsymbol-filled: 1; --frg-materialsymbol-filled-hover: 1; color: #d81b60; }'
         }
       </style>
       <button

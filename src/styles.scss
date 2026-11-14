@@ -11,10 +11,11 @@ $filled: var(--frg-materialsymbol-filled, 0);
 $grade: var(--frg-materialsymbol-grade, 0);
 $opticalSize: var(--frg-materialsymbol-opticalSize, 24);
 
-// hover の値。アイコンには hover の既定の見た目が無いので、指定が無ければ状態なしの値のまま
-$weightHover: var(--frg-materialsymbol-fontWeight-hover, #{$weight});
-$filledHover: var(--frg-materialsymbol-filled-hover, #{$filled});
-$gradeHover: var(--frg-materialsymbol-grade-hover, #{$grade});
+// hover の値。指定が無ければ部品の既定の値（状態なしの値を引き継がない。design.md の DS-8）。
+// 1つの値（design の `fontWeight: 700`・プロパティの `fontWeight={700}`）は、部品が hover の変数にも書く
+$weightHover: var(--frg-materialsymbol-fontWeight-hover, 400);
+$filledHover: var(--frg-materialsymbol-filled-hover, 0);
+$gradeHover: var(--frg-materialsymbol-grade-hover, 0);
 
 // フォントファミリーは部品が style で指定する（種類ごとのクラス frg-materialsymboloutlined などは、選ぶためだけのもの）
 :where(.frg-materialsymbol) {
