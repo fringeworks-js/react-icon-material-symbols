@@ -1,0 +1,3 @@
+// Material Symbols のフォント（`@font-face`）を、npm の material-symbols から読み込む
+// 利用者のバンドラーが material-symbols の CSS とフォントのファイルを解決するよう、プレーンな CSS の @import のまま出力する
+@import 'material-symbols/outlined.css';

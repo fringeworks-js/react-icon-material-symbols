@@ -1,0 +1,48 @@
+// Material Symbols の見た目
+// アイコンの箱（frg-icon・frg-fonticon）は react-icon の CSS を取り込む。利用者はこのファイルだけを読み込めばよい
+// 詳細度を 0 にするため、セレクターは :where() で包む
+// 変数は要素で宣言せず、使う場所で既定値を書く（入れ子にしても外側の値を消さない）
+// 変数の名前は design の値と同じ（--frg-materialsymbol-<プロパティ>[-<状態>]）
+@use '@fringeworks/react-icon/styles.css';
+
+// 状態なしの値
+$weight: var(--frg-materialsymbol-fontWeight, 400);
+$filled: var(--frg-materialsymbol-filled, 0);
+$grade: var(--frg-materialsymbol-grade, 0);
+$opticalSize: var(--frg-materialsymbol-opticalSize, 24);
+
+// hover の値。アイコンには hover の既定の見た目が無いので、指定が無ければ状態なしの値のまま
+$weightHover: var(--frg-materialsymbol-fontWeight-hover, #{$weight});
+$filledHover: var(--frg-materialsymbol-filled-hover, #{$filled});
+$gradeHover: var(--frg-materialsymbol-grade-hover, #{$grade});
+
+// フォントファミリーは部品が style で指定する（種類ごとのクラス frg-materialsymboloutlined などは、選ぶためだけのもの）
+:where(.frg-materialsymbol) {
+  font-weight: $weight;
+  font-variation-settings:
+    'FILL' $filled,
+    'GRAD' $grade;
+}
+
+// 光学サイズを指定したときだけ opsz を書く。
+// opsz を書くと、font-optical-sizing: auto（文字の大きさに合わせた自動の光学サイズ）が効かなくなるため
+:where(.frg-materialsymbol-opticalSize) {
+  font-variation-settings:
+    'FILL' $filled,
+    'GRAD' $grade,
+    'opsz' $opticalSize;
+}
+
+:where(.frg-materialsymbol:hover) {
+  font-weight: $weightHover;
+  font-variation-settings:
+    'FILL' $filledHover,
+    'GRAD' $gradeHover;
+}
+
+:where(.frg-materialsymbol-opticalSize:hover) {
+  font-variation-settings:
+    'FILL' $filledHover,
+    'GRAD' $gradeHover,
+    'opsz' $opticalSize;
+}
