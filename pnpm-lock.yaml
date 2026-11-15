@@ -110,11 +110,11 @@ importers:
   .:
     dependencies:
       '@fringeworks/react-contract':
-        specifier: ^0.3.0
-        version: 0.3.0(react@19.3.1)
+        specifier: ^0.3.1
+        version: 0.3.2(react@19.3.1)
       '@fringeworks/react-icon':
-        specifier: ^0.1.1
-        version: 0.1.1(react@19.3.1)
+        specifier: ^0.2.0
+        version: 0.2.0(react@19.3.1)
       '@fringeworks/react-merge':
         specifier: ^0.9.2
         version: 0.9.2(react@19.3.1)
@@ -622,13 +622,13 @@ packages:
       typescript:
         optional: true
 
-  '@fringeworks/react-contract@0.3.0':
-    resolution: {integrity: sha512-aVL92HqpuHwsbSjKdUoRd5dRQBMkKjfmMUeNr7NiPF/7y4g47NRI5Tt5nhOikE5VxJFVxPbyP3/LQmEjFrtgvA==}
+  '@fringeworks/react-contract@0.3.2':
+    resolution: {integrity: sha512-wdxZUTTS43rXGbfZNQlboCgM+GzTJhjLUdVcUcjjeLzvUXmLlYNW8swKWLCj6Xfl/XWv6330VEH+Ul21aRqdcw==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
 
-  '@fringeworks/react-icon@0.1.1':
-    resolution: {integrity: sha512-IbUHCOGVZ1UaMdpVs5t9uK7QdaXhm7QI2BWXStMQV6N2mia5qg62WZUm9EdyXYNA1hdetitzOaoL+MzG/hrK5w==}
+  '@fringeworks/react-icon@0.2.0':
+    resolution: {integrity: sha512-pA/vHK07QaXbQllAJniu8pwJIHBG4yqhezfRKf6cNltz+I4G4VKEz8p0XWlVAtXBrWYqoOl8DiHYag9+DBVnyg==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
 
@@ -3721,16 +3721,16 @@ snapshots:
       - supports-color
       - vue-tsc
 
-  '@fringeworks/react-contract@0.3.0(react@19.3.1)':
+  '@fringeworks/react-contract@0.3.2(react@19.3.1)':
     dependencies:
       '@fringeworks/design-utils': 0.4.0
       '@fringeworks/style-utils': 0.9.1
       '@fringeworks/types': 1.2.0
       react: 19.3.1
 
-  '@fringeworks/react-icon@0.1.1(react@19.3.1)':
+  '@fringeworks/react-icon@0.2.0(react@19.3.1)':
     dependencies:
-      '@fringeworks/react-contract': 0.3.0(react@19.3.1)
+      '@fringeworks/react-contract': 0.3.2(react@19.3.1)
       '@fringeworks/react-merge': 0.9.2(react@19.3.1)
       '@fringeworks/utils': 2.3.0
       react: 19.3.1

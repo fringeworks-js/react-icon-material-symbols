@@ -19,6 +19,9 @@ $gradeHover: var(--frg-materialsymbol-grade-hover, 0);
 
 // フォントファミリーは部品が style で指定する（種類ごとのクラス frg-materialsymboloutlined などは、選ぶためだけのもの）
 :where(.frg-materialsymbol) {
+  // セットの倍率（react-icon の --frg-icon-glyphScale）。Material Symbols は 24 の枠に約 2 の余白を空けて描かれているので、
+  // 1em では周りの文字より小さく見える。1.25 倍で、周りの文字と同じくらいに見える（planning/react-icon/plan.md の IC-16）
+  --frg-icon-glyphScale: 1.25;
   font-weight: $weight;
   font-variation-settings:
     'FILL' $filled,

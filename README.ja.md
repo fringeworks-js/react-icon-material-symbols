@@ -83,7 +83,9 @@ import '@fringeworks/react-icon-material-symbols/font-outlined.css';
 
 ### 大きさと色
 
-アイコンは `1em` の正方形の箱に描き、大きさは親の `font-size` を、色は `color` を受け継ぎます。文やボタンの中では、周りの文字と同じ大きさ・色になります。Material Symbols の付属のクラスのように 24px に固定しないので、24px にしたいときは `font-size` を指定します。
+アイコンは正方形の箱に描き、色は `color` を受け継ぎます。大きさは、周りの文字と同じに見える大きさ（親の `font-size` の 1.25 倍）です。Material Symbols は字形の周りに余白が多く、1em では文字より小さく見えるためです（react-icon の `--frg-icon-glyphScale` を `1.25` にしています）。縦の位置は、どのフォントの日本語や英字と並べても真ん中がそろって見えるよう、文字のベースラインを基準に決めています（react-icon の「大きさ・位置・色」）。
+
+Material Symbols の付属のクラスのように 24px に固定しないので、24px にしたいときは `font-size` を指定します（指定した大きさになります）。ボタンの中など、react-components の部品の中のアイコンは、部品が決めた大きさになります。
 
 ```tsx
 <MaterialSymbolOutlined
@@ -264,7 +266,7 @@ MaterialSymbolSharp(props: MaterialSymbolProps): ReactElement
 
 | クラス                                                                               | 説明                                                                                                            |
 | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| `frg-icon`・`frg-fonticon`                                                           | react-icon のクラス（`1em` の正方形の箱と、アイコンフォントの指定）                                             |
+| `frg-icon`・`frg-fonticon`                                                           | react-icon のクラス（正方形の箱と、アイコンフォントの指定）                                                     |
 | `frg-materialsymbol`                                                                 | Material Symbols のすべてのアイコン。可変フォントの軸を CSS 変数から組み立てる                                  |
 | `frg-materialsymboloutlined`・`frg-materialsymbolrounded`・`frg-materialsymbolsharp` | 種類ごとのクラス。種類を選ぶためのもので、CSS の規則は持たない（フォントファミリーは部品が `style` で指定する） |
 | `frg-materialsymbol-opticalSize`                                                     | 光学サイズを固定するときに付く                                                                                  |

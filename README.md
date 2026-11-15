@@ -83,7 +83,9 @@ Use `font-display: block` when you serve it yourself too. Icons are not drawn un
 
 ### Size and color
 
-Icons are drawn in a `1em` square box and inherit the parent's `font-size` and `color`. In text and buttons they match the size and color of the surrounding text. Unlike the classes that come with Material Symbols, the size is not fixed at 24px; set `font-size` when you want 24px.
+Icons are drawn in a square box and inherit `color`. The size looks the same as the surrounding text (1.25 times the parent's `font-size`), because Material Symbols has a lot of space around the glyphs and looks smaller than the text at 1em (react-icon's `--frg-icon-glyphScale` is set to `1.25`). The vertical position is based on the baseline of the text, so that icons look centered next to Japanese and Latin text in any font (see "Size, position and color" in react-icon).
+
+Unlike the classes that come with Material Symbols, the size is not fixed at 24px; set `font-size` when you want 24px (the icon gets that size). Icons inside components of react-components, such as buttons, get the size the component decides.
 
 ```tsx
 <MaterialSymbolOutlined
@@ -264,7 +266,7 @@ When you set `opticalSize` with a CSS variable, also add the `frg-materialsymbol
 
 | Class                                                                                | Description                                                                                                  |
 | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| `frg-icon`, `frg-fonticon`                                                           | react-icon classes (the `1em` square box and the icon font settings)                                         |
+| `frg-icon`, `frg-fonticon`                                                           | react-icon classes (the square box and the icon font settings)                                               |
 | `frg-materialsymbol`                                                                 | Every Material Symbols icon. Builds the variable font axes from CSS variables                                |
 | `frg-materialsymboloutlined`, `frg-materialsymbolrounded`, `frg-materialsymbolsharp` | One per style, for selecting a style. They have no CSS rules (the component sets the font family in `style`) |
 | `frg-materialsymbol-opticalSize`                                                     | Added when the optical size is fixed                                                                         |
