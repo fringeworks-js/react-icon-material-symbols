@@ -30,6 +30,26 @@ import '@fringeworks/react-icon-material-symbols/font-outlined.css';
 
 The type of `value` is the Material Symbols icon names (`MaterialSymbolValue`), so you get completion, and typos are type errors.
 
+### Loading the CSS and font automatically (with-css)
+
+When you import a component from the `with-css` entry points, the styles and the font loading are loaded too. You can use the component just by importing it, without loading the CSS or the font separately. You need a bundler that handles CSS imports (Vite, webpack, Next.js, and so on).
+
+```tsx
+import { MaterialSymbolOutlined } from '@fringeworks/react-icon-material-symbols/with-css/MaterialSymbolOutlined';
+
+<MaterialSymbolOutlined value="home" />;
+```
+
+| Entry point                       | What it loads                                                        |
+| --------------------------------- | -------------------------------------------------------------------- |
+| `with-css`                        | The three components. `styles.css` and the fonts of all three styles |
+| `with-css/MaterialSymbolOutlined` | `MaterialSymbolOutlined`. `styles.css` and the Outlined font         |
+| `with-css/MaterialSymbolRounded`  | `MaterialSymbolRounded`. `styles.css` and the Rounded font           |
+| `with-css/MaterialSymbolSharp`    | `MaterialSymbolSharp`. `styles.css` and the Sharp font               |
+
+- The fonts are the same as this package's entry points (`font-<style>.css`) in "Loading the font" below. `with-css` loads the fonts of all three styles, but the browser downloads only the fonts of the styles you draw (the build output contains the font files of all three styles).
+- When you use Google Fonts or fonts you serve yourself, import from the entry points without `with-css`.
+
 ### Three styles
 
 There is one component per Material Symbols style. Apps usually stick to one style, so give it a short name with an import alias.
@@ -259,6 +279,7 @@ When you set `opticalSize` with a CSS variable, also add the `frg-materialsymbol
 
 | Entry point                                               | Description                                                                                                                                                     |
 | --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `with-css`, `with-css/<component>`                        | JS entry points that export the components and also load `styles.css` and the font loading (see "Loading the CSS and font automatically" above)                 |
 | `styles.css`                                              | The icon styles (including react-icon's box CSS). Does not include the fonts                                                                                    |
 | `font-outlined.css`, `font-rounded.css`, `font-sharp.css` | Loads the font for each style (the `@font-face` from the npm `material-symbols` package). Do not load them when you use Google Fonts or serve the font yourself |
 

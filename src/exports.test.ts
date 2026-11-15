@@ -12,8 +12,13 @@ import { fileURLToPath } from 'node:url';
  * フォルダー名と同じ名前の export を書き忘れると、ルートから黙って消える。
  */
 const root = dirname(fileURLToPath(import.meta.url));
+// ルートから export しないフォルダー（with-css は CSS を読み込むため）
+const SEPARATE_ENTRIES: ReadonlySet<string> = new Set(['with-css']);
 const folders = readdirSync(root).filter(
-  (name) => !name.startsWith('_') && statSync(join(root, name)).isDirectory(),
+  (name) =>
+    !name.startsWith('_') &&
+    !SEPARATE_ENTRIES.has(name) &&
+    statSync(join(root, name)).isDirectory(),
 );
 
 describe('exports', () => {

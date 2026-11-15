@@ -30,6 +30,26 @@ import '@fringeworks/react-icon-material-symbols/font-outlined.css';
 
 `value` の型は Material Symbols のアイコンの名前（`MaterialSymbolValue`）なので、補完が効き、書き間違いは型エラーになります。
 
+### CSS とフォントを自動で読み込む（with-css）
+
+`with-css` の入口から部品を import すると、見た目の CSS とフォントの読み込みも一緒に読み込まれます。CSS やフォントを別に読み込まずに、部品を import するだけで使えます。CSS の import を扱えるバンドラー（Vite・webpack・Next.js など）が要ります。
+
+```tsx
+import { MaterialSymbolOutlined } from '@fringeworks/react-icon-material-symbols/with-css/MaterialSymbolOutlined';
+
+<MaterialSymbolOutlined value="home" />;
+```
+
+| 入口                              | 読み込むもの                                                  |
+| --------------------------------- | ------------------------------------------------------------- |
+| `with-css`                        | 3つの部品。`styles.css` と3つの種類のフォント                 |
+| `with-css/MaterialSymbolOutlined` | `MaterialSymbolOutlined`。`styles.css` と Outlined のフォント |
+| `with-css/MaterialSymbolRounded`  | `MaterialSymbolRounded`。`styles.css` と Rounded のフォント   |
+| `with-css/MaterialSymbolSharp`    | `MaterialSymbolSharp`。`styles.css` と Sharp のフォント       |
+
+- フォントは、下の「フォントの読み込み」の、このパッケージの入口（`font-<種類>.css`）と同じものです。`with-css` は3つの種類のフォントを読み込みますが、ブラウザーは描いた種類のフォントだけをダウンロードします（ビルドの出力には、3つの種類のフォントのファイルが置かれます）
+- Google Fonts や自分で配るフォントを使うときは、`with-css` でない入口から import します
+
 ### 3つの種類
 
 Material Symbols の種類ごとに部品が分かれています。アプリでは種類を1つにそろえることが多いので、短い名前は import の別名で付けてください。
@@ -259,6 +279,7 @@ MaterialSymbolSharp(props: MaterialSymbolProps): ReactElement
 
 | 入口                                                      | 説明                                                                                                                                 |
 | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `with-css`・`with-css/<部品>`                             | 部品を export し、`styles.css` とフォントの読み込みも読み込む JS の入口（上の「CSS とフォントを自動で読み込む」）                    |
 | `styles.css`                                              | アイコンの見た目（react-icon の箱の CSS を含む）。フォントは含まない                                                                 |
 | `font-outlined.css`・`font-rounded.css`・`font-sharp.css` | 種類ごとのフォントの読み込み（npm の `material-symbols` の `@font-face`）。Google Fonts や自分で配るフォントを使うときは読み込まない |
 
